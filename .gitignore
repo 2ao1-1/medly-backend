@@ -1,0 +1,23 @@
+# منع مجلدات Node.js من الرفع
+node_modules/
+dist/
+
+# إخفاء ملفات البيئة الحساسة
+.env
+
+# منع ملفات الـ Editor المؤقتة
+.vscode/
+.idea/
+.DS_Store
+
+# إخفاء ملفات الـ Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# إخفاء ملفات البناء (Build)
+build/
+out/
+coverage/

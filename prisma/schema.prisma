@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  phone     String   @unique
+  email     String?  @unique  // البريد الإلكتروني اختياري
+  password  String
+  avatar    String?  // صورة الملف الشخصي للمستخدم
+  verificationCode       Int?       // كود التحقق
+  verificationCodeExpiry DateTime?  // انتهاء صلاحية كود التحقق
+  isVerified            Boolean @default(false) // هل تم التحقق؟
+  createdAt DateTime @default(now())
+
+  // العلاقة مع المواعيد
+  appointments Appointment[]
+}
+
+model Doctor {
+  id        String   @id @default(uuid())
+  name      String
+  specialty String   // التخصص الطبي
+  title     String   // المسمى الوظيفي
+  phone     String   @unique
+  email     String   @unique
+  password  String
+  avatar    String?  // صورة الطبيب
+  documents String[]  // سيتم تخزين روابط الملفات المرفوعة
+  isApproved Boolean  @default(false)  // حالة الموافقة على الطبيب
+  createdAt DateTime @default(now())
+
+  // العلاقة مع المواعيد
+  appointments Appointment[]
+
+  // العلاقة مع جدول أوقات العمل
+  workingHours WorkingHours[]
+}
+
+model Appointment {
+  id        String   @id @default(uuid())
+  patientId String
+  doctorId  String
+  date      DateTime
+  time      String
+  status    String   @default("pending") // حالات الحجز: pending, confirmed, canceled
+  createdAt DateTime @default(now())
+
+  // العلاقات مع المستخدم والطبيب
+  patient User   @relation(fields: [patientId], references: [id])
+  doctor  Doctor @relation(fields: [doctorId], references: [id])
+}
+
+model WorkingHours {
+  id        String   @id @default(uuid())
+  doctorId  String
+  day       String   // اليوم (مثلاً: Monday, Tuesday)
+  startTime String   // وقت بداية العمل
+  endTime   String   // وقت انتهاء العمل
+  createdAt DateTime @default(now())
+
+  // العلاقة مع الطبيب
+  doctor Doctor @relation(fields: [doctorId], references: [id])
+}

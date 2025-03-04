@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  backend:
+    image: 2ao11/medly_v1:latest
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      DATABASE_URL: "postgresql://postgres:NewSecurePass123@db:5432/doctor_appointments"
+      JWT_SECRET: "mysupersecretkey12345"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: yourpassword
+      POSTGRES_DB: doctor_appointments
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
