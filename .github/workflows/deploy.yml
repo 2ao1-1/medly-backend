@@ -1,3 +1,35 @@
+# name: Deploy Backend
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: 🛎 Checkout Repository
+#         uses: actions/checkout@v3
+
+#       - name: 📦 Setup Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: 18
+
+#       - name: 📜 Install Dependencies
+#         run: npm install
+#         working-directory: ./
+
+#       - name: 🚀 Run Tests
+#         run: npm test
+#         working-directory: ./
+
+#       - name: 🏗 Build Project
+#         run: npm run build
+#         working-directory: ./
+
 name: Deploy Backend
 
 on:
@@ -10,22 +42,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🛎 Checkout Repository
-        uses: actions/checkout@v3
+      - name: Manual Checkout
+        run: |
+          mkdir -p ${{ github.workspace }}
+          cd ${{ github.workspace }}
+          git clone https://github.com/2ao1-1/medly-backend.git
+          cd medly-backend
 
-      - name: 📦 Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+      - name: Setup Node.js
+        run: |
+          NODE_VERSION=18
+          curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash -
+          apt-get install -y nodejs
 
-      - name: 📜 Install Dependencies
+      - name: Install Dependencies
         run: npm install
-        working-directory: ./
 
-      - name: 🚀 Run Tests
+      - name: Run Tests
         run: npm test
-        working-directory: ./
 
-      - name: 🏗 Build Project
+      - name: Build Project
         run: npm run build
-        working-directory: ./
