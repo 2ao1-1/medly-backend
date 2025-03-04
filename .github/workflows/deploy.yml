@@ -42,24 +42,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Manual Checkout
-        run: |
-          mkdir -p ${{ github.workspace }}
-          cd ${{ github.workspace }}
-          git clone https://github.com/2ao1-1/medly-backend.git
-          cd medly-backend
+      - uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        run: |
-          NODE_VERSION=18
-          curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash -
-          apt-get install -y nodejs
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
 
       - name: Install Dependencies
-        run: npm install
+        run: |
+          cd medly-backend
+          npm install
 
       - name: Run Tests
-        run: npm test
+        run: |
+          cd medly-backend
+          npm test
 
       - name: Build Project
-        run: npm run build
+        run: |
+          cd medly-backend
+          npm run build
